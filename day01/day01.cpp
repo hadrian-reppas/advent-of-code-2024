@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <print>
 
-std::pair<std::vector<long>, std::vector<long> > parseInput(const std::string &input) {
+static std::pair<std::vector<long>, std::vector<long> > parseInput(const std::string &input) {
     std::stringstream stream(input);
     std::string line;
     std::vector<long> left, right;

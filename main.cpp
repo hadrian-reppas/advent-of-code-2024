@@ -3,6 +3,7 @@
 #include <print>
 
 #include "day01/day01.h"
+#include "day02/day02.h"
 
 #define RUN(DAY)                                                        \
     do {                                                                \
@@ -16,6 +17,7 @@
 
 int main() {
     RUN(day01);
+    RUN(day02);
 
     return 0;
 }

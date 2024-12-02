@@ -1,16 +1,16 @@
 //
-// Created by Hadrian Reppas on 12/1/24.
+// Created by Hadrian Reppas on 12/2/24.
 //
 
-#ifndef DAY01_H
-#define DAY01_H
+#ifndef DAY02_H
+#define DAY02_H
 
 #include <string>
 
-namespace day01 {
+namespace day02 {
     void part1(const std::string &input);
 
     void part2(const std::string &input);
 }
 
-#endif //DAY01_H
+#endif //DAY02_H
