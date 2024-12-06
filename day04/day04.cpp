@@ -36,25 +36,15 @@ static int part2Deltas[4][5][2] = {
     {{0, 0}, {-1, -1}, {1, 1}, {-1, 1}, {1, -1}},
 };
 
-static long countAtPart1(const std::vector<std::string> &grid, long i, long j) {
+template<size_t n, size_t m>
+static long countAt(const std::vector<std::string> &grid, long i, long j, const int (&deltas)[n][m][2],
+                    const std::string_view s) {
     long count = 0;
-    for (const auto &delta: part1Deltas) {
+    for (const auto &delta: deltas) {
         if (auto [di, dj] = delta[3]; i + di < 0 || i + di >= grid.size() || j + dj < 0 || j + dj >= grid[i].size())
             continue;
 
-        count += std::ranges::all_of(delta | std::ranges::views::enumerate, [&grid, i, j](const auto &pair) {
-            auto [k, d] = pair;
-            auto [di, dj] = d;
-            return "XMAS"[k] == grid[i + di][j + dj];
-        });
-    }
-    return count;
-}
-
-static long countAtPart2(const std::vector<std::string> &grid, long i, long j) {
-    long count = 0;
-    for (const auto &delta: part2Deltas)
-        count += std::ranges::all_of(delta | std::ranges::views::enumerate, [&grid, i, j](const auto &pair) {
+        count += std::ranges::all_of(delta | std::ranges::views::enumerate, [&grid, i, j, s](const auto &pair) {
             auto [k, d] = pair;
             auto [di, dj] = d;
             return (
@@ -62,30 +52,31 @@ static long countAtPart2(const std::vector<std::string> &grid, long i, long j) {
                 && i + di < grid.size()
                 && j + dj >= 0
                 && j + dj < grid[i].size()
-                && "AMSMS"[k] == grid[i + di][j + dj]);
+                && s[k] == grid[i + di][j + dj]);
         });
+    }
     return count;
 }
 
 namespace day04 {
     void part1(const std::string &input) {
-        auto grid = parseInput(input);
+        const auto grid = parseInput(input);
         long count = 0;
 
         for (long i = 0; i < grid.size(); i++)
             for (long j = 0; j < grid[i].size(); j++)
-                count += countAtPart1(grid, i, j);
+                count += countAt<8, 4>(grid, i, j, part1Deltas, "XMAS");
 
         std::println("{}", count);
     }
 
     void part2(const std::string &input) {
-        auto grid = parseInput(input);
+        const auto grid = parseInput(input);
         long count = 0;
 
         for (long i = 0; i < grid.size(); i++)
             for (long j = 0; j < grid[i].size(); j++)
-                count += countAtPart2(grid, i, j);
+                count += countAt<4, 5>(grid, i, j, part2Deltas, "AMSMS");
 
         std::println("{}", count);
     }
