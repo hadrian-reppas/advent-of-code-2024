@@ -8,9 +8,9 @@
 #include <string>
 
 namespace day04 {
-    void part1(const std::string &input);
+    long part1(const std::string &input);
 
-    void part2(const std::string &input);
+    long part2(const std::string &input);
 }
 
 #endif //DAY04_H

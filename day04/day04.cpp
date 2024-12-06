@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <print>
 #include <ranges>
 #include <bits/ranges_algo.h>
 
@@ -59,7 +58,7 @@ static long countAt(const std::vector<std::string> &grid, long i, long j, const 
 }
 
 namespace day04 {
-    void part1(const std::string &input) {
+    long part1(const std::string &input) {
         const auto grid = parseInput(input);
         long count = 0;
 
@@ -67,10 +66,10 @@ namespace day04 {
             for (long j = 0; j < grid[i].size(); j++)
                 count += countAt<8, 4>(grid, i, j, part1Deltas, "XMAS");
 
-        std::println("{}", count);
+        return count;
     }
 
-    void part2(const std::string &input) {
+    long part2(const std::string &input) {
         const auto grid = parseInput(input);
         long count = 0;
 
@@ -78,6 +77,6 @@ namespace day04 {
             for (long j = 0; j < grid[i].size(); j++)
                 count += countAt<4, 5>(grid, i, j, part2Deltas, "AMSMS");
 
-        std::println("{}", count);
+        return count;
     }
 }

@@ -6,7 +6,6 @@
 #include <vector>
 #include <sstream>
 #include <ranges>
-#include <print>
 #include <algorithm>
 
 static std::vector<std::vector<long> > parseInput(const std::string &input) {
@@ -53,13 +52,13 @@ static bool isValidPart2(std::vector<long> &report) {
 }
 
 namespace day02 {
-    void part1(const std::string &input) {
+    long part1(const std::string &input) {
         auto reports = parseInput(input);
-        std::println("{}", std::ranges::count_if(reports, isValid));
+        return std::ranges::count_if(reports, isValid);
     }
 
-    void part2(const std::string &input) {
+    long part2(const std::string &input) {
         auto reports = parseInput(input);
-        std::println("{}", std::ranges::count_if(reports, isValidPart2));
+        return std::ranges::count_if(reports, isValidPart2);
     }
 }

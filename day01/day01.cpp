@@ -10,7 +10,6 @@
 #include <vector>
 #include <ranges>
 #include <unordered_map>
-#include <print>
 
 static std::pair<std::vector<long>, std::vector<long> > parseInput(const std::string &input) {
     std::stringstream stream(input);
@@ -29,7 +28,7 @@ static std::pair<std::vector<long>, std::vector<long> > parseInput(const std::st
 }
 
 namespace day01 {
-    void part1(const std::string &input) {
+    long part1(const std::string &input) {
         auto [left, right] = parseInput(input);
 
         std::ranges::sort(left);
@@ -41,11 +40,10 @@ namespace day01 {
         };
         auto deltas = std::views::zip(left, right)
                       | std::views::transform(diff);
-        const auto sum = std::accumulate(std::begin(deltas), std::end(deltas), 0L);
-        std::println("{}", sum);
+        return std::accumulate(std::begin(deltas), std::end(deltas), 0L);
     }
 
-    void part2(const std::string &input) {
+    long part2(const std::string &input) {
         auto [left, right] = parseInput(input);
         std::unordered_map<long, long> rightCounts;
         for (const auto r: right)
@@ -54,7 +52,6 @@ namespace day01 {
         auto scores = left | std::views::transform([&rightCounts](const auto l) {
             return l * rightCounts[l];
         });
-        auto sum = std::accumulate(std::begin(scores), std::end(scores), 0LL);
-        std::println("{}", sum);
+        return std::accumulate(std::begin(scores), std::end(scores), 0L);
     }
 }
