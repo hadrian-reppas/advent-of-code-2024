@@ -10,6 +10,7 @@
 #include "day06/day06.h"
 #include "day07/day07.h"
 #include "day08/day08.h"
+#include "day09/day09.h"
 
 #define RUN(DAY)                                                        \
     do {                                                                \
@@ -30,6 +31,7 @@ int main() {
     // RUN(day06);
     RUN(day07);
     RUN(day08);
+    RUN(day09);
 
     return 0;
 }
