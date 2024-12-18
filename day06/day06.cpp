@@ -17,6 +17,7 @@ static std::pair<long, long> findStart(const std::vector<std::string> &grid) {
         for (long j = 0; j < grid[i].size(); j++)
             if (grid[i][j] == '^')
                 return std::make_pair(i, j);
+    return std::make_pair(0, 0);
 }
 
 static std::optional<std::set<std::tuple<long, long, long> > > doWalk(const std::vector<std::string> &grid, long row,
