@@ -3,6 +3,9 @@ project(advent_of_code_2024)
 
 set(CMAKE_CXX_STANDARD 23)
 
+include_directories(/opt/homebrew/Cellar/z3/4.13.4/include)
+link_directories(/opt/homebrew/Cellar/z3/4.13.4/lib)
+
 add_executable(advent_of_code_2024 main.cpp
         util/util.h
         util/util.cpp
@@ -40,3 +43,5 @@ add_executable(advent_of_code_2024 main.cpp
         day16/day16.cpp
         day17/day17.h
         day17/day17.cpp)
+
+target_link_libraries(advent_of_code_2024 PRIVATE z3)
