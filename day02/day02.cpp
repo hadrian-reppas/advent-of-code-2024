@@ -4,25 +4,19 @@
 
 #include <string>
 #include <vector>
-#include <sstream>
 #include <ranges>
 #include <algorithm>
 
+#include "../util/util.h"
+
 static std::vector<std::vector<long> > parseInput(const std::string &input) {
     std::vector<std::vector<long> > out;
-
-    std::stringstream stream(input);
-    std::string line;
-    while (std::getline(stream, line)) {
-        std::stringstream lineStream(line);
-        std::vector<long> row;
-        std::string value;
-        while (std::getline(lineStream, value, ' ')) {
-            row.push_back(std::stoi(value));
-        }
-        out.push_back(row);
+    for (const auto &line: split(input)) {
+        out.push_back(
+            split(line, ' ')
+            | std::ranges::views::transform([](const auto &c) { return std::stol(c); })
+            | std::ranges::to<std::vector<long> >());
     }
-
     return out;
 }
 

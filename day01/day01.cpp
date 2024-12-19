@@ -3,27 +3,20 @@
 //
 
 #include <algorithm>
-#include <iostream>
 #include <numeric>
 #include <string>
-#include <sstream>
 #include <vector>
 #include <ranges>
 #include <unordered_map>
 
+#include "../util/util.h"
+
 static std::pair<std::vector<long>, std::vector<long> > parseInput(const std::string &input) {
-    std::stringstream stream(input);
-    std::string line;
     std::vector<long> left, right;
-
-    while (std::getline(stream, line)) {
-        std::stringstream lineStream(line);
-        long l, r;
-        lineStream >> l >> r;
-        left.push_back(l);
-        right.push_back(r);
+    for (const auto &line: split(input)) {
+        left.push_back(std::stol(line.substr(0, 5)));
+        right.push_back(std::stol(line.substr(8)));
     }
-
     return std::make_pair(left, right);
 }
 

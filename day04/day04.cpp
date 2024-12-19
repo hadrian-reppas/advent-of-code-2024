@@ -4,18 +4,10 @@
 
 #include <string>
 #include <vector>
-#include <sstream>
 #include <ranges>
-#include <bits/ranges_algo.h>
+#include <algorithm>
 
-static std::vector<std::string> parseInput(const std::string &input) {
-    std::vector<std::string> grid;
-    std::stringstream stream(input);
-    std::string line;
-    while (std::getline(stream, line))
-        grid.push_back(line);
-    return grid;
-}
+#include "../util/util.h"
 
 static int part1Deltas[8][4][2] = {
     {{0, 0}, {1, 0}, {2, 0}, {3, 0}},
@@ -59,7 +51,7 @@ static long countAt(const std::vector<std::string> &grid, long i, long j, const 
 
 namespace day04 {
     long part1(const std::string &input) {
-        const auto grid = parseInput(input);
+        const auto grid = split(input);
         long count = 0;
 
         for (long i = 0; i < grid.size(); i++)
@@ -70,7 +62,7 @@ namespace day04 {
     }
 
     long part2(const std::string &input) {
-        const auto grid = parseInput(input);
+        const auto grid = split(input);
         long count = 0;
 
         for (long i = 0; i < grid.size(); i++)

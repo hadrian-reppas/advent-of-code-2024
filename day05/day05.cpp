@@ -4,36 +4,31 @@
 
 #include <string>
 #include <vector>
-#include <sstream>
 #include <unordered_map>
 #include <unordered_set>
-#include <bits/ranges_algo.h>
-#include <print>
+#include <ranges>
+
+#include "../util/util.h"
 
 static std::pair<std::vector<std::pair<long, long> >, std::vector<std::vector<long> > > parseInput(
     const std::string &input) {
     std::vector<std::pair<long, long> > rules;
-    std::vector<std::vector<long> > updates;
 
-    std::stringstream stream(input);
-    bool readingRules = true;
-    std::string line;
-    while (std::getline(stream, line)) {
-        if (line.empty()) {
-            readingRules = false;
-        } else if (readingRules) {
-            const auto bar = line.find('|');
-            long left = std::stol(line.substr(0, bar));
-            long right = std::stol(line.substr(bar + 1));
-            rules.emplace_back(left, right);
-        } else {
-            std::stringstream lineStream(line);
-            std::vector<long> update;
-            std::string value;
-            while (std::getline(lineStream, value, ','))
-                update.push_back(std::stoi(value));
-            updates.push_back(update);
-        }
+    const auto lines = split(input);
+    long i = 0;
+    for (; !lines[i].empty(); i++) {
+        const auto parts = split(lines[i], '|');
+        rules.emplace_back(std::stol(parts[0]), std::stol(parts[1]));
+    }
+
+    std::vector<std::vector<long> > updates;
+    i += 1;
+    for (; i < lines.size(); i++) {
+        updates.push_back(
+            split(lines[i], ',')
+            | std::ranges::views::transform([](const auto &part) { return std::stol(part); })
+            | std::ranges::to<std::vector<long> >()
+        );
     }
 
     return std::make_pair(rules, updates);
@@ -75,15 +70,6 @@ static std::pair<bool, long> processUpdate(const std::vector<std::pair<long, lon
     const std::unordered_set<long> nodes(updates.begin(), updates.end());
     const auto sorted = toposort(rules, nodes);
     return std::make_pair(updates == sorted, sorted[sorted.size() / 2]);
-}
-
-static long reorderAndTakeMiddle(const std::unordered_map<long, long> &indices, std::vector<long> &updates) {
-    std::ranges::sort(updates, [&indices](const long a, const long b) {
-        std::println("{} {}", a, b);
-        return indices.at(a) < indices.at(b);
-    });
-
-    return updates[updates.size() / 2];
 }
 
 namespace day05 {
