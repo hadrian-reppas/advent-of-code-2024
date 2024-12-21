@@ -6,7 +6,6 @@
 #include <ranges>
 #include <string>
 #include <vector>
-#include <print>
 #include <unordered_map>
 #include <numeric>
 
@@ -14,7 +13,7 @@
 
 struct SpanHash {
     std::size_t operator()(const std::span<long> &span) const {
-        return std::accumulate(span.begin(), span.end(), 0UL, [](std::size_t hash, long val) {
+        return std::accumulate(span.begin(), span.end(), 0UL, [](const std::size_t hash, const long val) {
             return hash * 31 + std::hash<long>{}(val);
         });
     }
@@ -25,16 +24,6 @@ struct SpanEqual {
         return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin());
     }
 };
-
-static void println(const std::span<long> &towel) {
-    std::print("[");
-    for (long i = 0; i < towel.size(); ++i) {
-        if (i > 0)
-            std::print(", ");
-        std::print("{}", towel[i]);
-    }
-    std::println("]");
-}
 
 static long parseColor(const char c) {
     switch (c) {
