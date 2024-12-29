@@ -50,6 +50,8 @@ add_executable(advent_of_code_2024 main.cpp
         day20/day20.h
         day20/day20.cpp
         day21/day21.h
-        day21/day21.cpp)
+        day21/day21.cpp
+        day22/day22.h
+        day22/day22.cpp)
 
 target_link_libraries(advent_of_code_2024 PRIVATE z3)
