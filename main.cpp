@@ -26,6 +26,7 @@
 #include "day22/day22.h"
 #include "day23/day23.h"
 #include "day24/day24.h"
+#include "day25/day25.h"
 
 #define RUN(DAY)                                                        \
     do {                                                                \
@@ -43,7 +44,7 @@ int main() {
     RUN(day03);
     RUN(day04);
     RUN(day05);
-    // RUN(day06);
+    RUN(day06);
     RUN(day07);
     RUN(day08);
     RUN(day09);
@@ -53,15 +54,16 @@ int main() {
     RUN(day13);
     RUN(day14);
     RUN(day15);
-    // RUN(day16);
+    RUN(day16);
     RUN(day17);
     RUN(day18);
     RUN(day19);
     RUN(day20);
     RUN(day21);
-    // RUN(day22);
+    RUN(day22);
     RUN(day23);
     RUN(day24);
+    RUN(day25);
 
     return 0;
 }
