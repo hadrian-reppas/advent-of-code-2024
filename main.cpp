@@ -25,6 +25,7 @@
 #include "day21/day21.h"
 #include "day22/day22.h"
 #include "day23/day23.h"
+#include "day24/day24.h"
 
 #define RUN(DAY)                                                        \
     do {                                                                \
@@ -60,6 +61,7 @@ int main() {
     RUN(day21);
     // RUN(day22);
     RUN(day23);
+    RUN(day24);
 
     return 0;
 }
