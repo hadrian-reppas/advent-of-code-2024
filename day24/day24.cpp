@@ -7,7 +7,12 @@
 #include <vector>
 #include <unordered_set>
 #include <array>
+#include <map>
+#include <random>
+#include <ranges>
 #include <print>
+
+#include "z3++.h"
 
 #include "../util/util.h"
 
@@ -37,6 +42,8 @@ struct Node {
                 return true;
             case Operation::False:
                 return false;
+            default:
+                assert(false);
         }
     }
 };
@@ -103,6 +110,94 @@ namespace day24 {
     }
 
     std::string part2(const std::string &input) {
-        return "bmn,jss,mvb,rds,wss,z08,z18,z23"; // TODO: translate Z3 code
+        std::vector<std::pair<std::string, Node> > nodes;
+        for (const auto &[name, node]: parseInput(input)) {
+            if (node.op == Operation::And || node.op == Operation::Or || node.op == Operation::Xor)
+                nodes.emplace_back(name, node);
+        }
+
+        z3::context ctx;
+        z3::solver solver{ctx};
+        std::map<std::pair<std::string, std::string>, z3::expr> swaps;
+        for (const auto &v1: std::ranges::views::keys(nodes)) {
+            for (const auto &v2: std::ranges::views::keys(nodes)) {
+                const auto swapVar = ctx.bool_const(std::format("swap_{}_{}", v1, v2).c_str());
+                swaps.insert({{v1, v2}, swapVar});
+                if (v1 != v2 && swaps.contains({v2, v1}))
+                    solver.add(swaps.at({v1, v2}) == swaps.at({v2, v1}));
+            }
+        }
+
+        z3::expr_vector diagSwapVars{ctx};
+        std::vector<int> ones;
+        for (const auto &v: std::ranges::views::keys(nodes)) {
+            diagSwapVars.push_back(swaps.at({v, v}));
+            ones.push_back(1);
+        }
+        solver.add(pbeq(diagSwapVars, ones.data(), static_cast<int>(nodes.size()) - 8));
+
+        for (const auto &v1: std::ranges::views::keys(nodes)) {
+            z3::expr_vector swapVars{ctx};
+            for (const auto &v2: std::ranges::views::keys(nodes))
+                swapVars.push_back(swaps.at({v1, v2}));
+            solver.add(pbeq(swapVars, ones.data(), 1));
+        }
+
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        std::uniform_int_distribution<long> dist(0, 35184372088831L);
+
+        for (long t = 0; t < 20; t++) {
+            const auto x = dist(gen);
+            const auto y = dist(gen);
+            const auto z = x + y;
+
+            std::unordered_map<std::string, z3::expr> before, after;
+            for (const auto &v: std::ranges::views::keys(nodes)) {
+                before.emplace(v, ctx.bool_const(std::format("before_{}_{}", v, t).c_str()));
+                after.emplace(v, ctx.bool_const(std::format("after_{}_{}", v, t).c_str()));
+            }
+
+            for (long i = 0; i < 45; i++) {
+                after.emplace(std::format("x{:02d}", i), ctx.bool_val((x >> i) & 1));
+                after.emplace(std::format("y{:02d}", i), ctx.bool_val((y >> i) & 1));
+            }
+
+            for (long i = 0; i < 46; i++)
+                solver.add(after.at(std::format("z{:02d}", i)) == ctx.bool_val((z >> i) & 1));
+
+            for (const auto &[v, node]: nodes) {
+                if (node.op == Operation::And)
+                    solver.add((after.at(node.lhs) & after.at(node.rhs)) == before.at(v));
+                else if (node.op == Operation::Or)
+                    solver.add((after.at(node.lhs) | after.at(node.rhs)) == before.at(v));
+                else
+                    solver.add((after.at(node.lhs) ^ after.at(node.rhs)) == before.at(v));
+
+                for (const auto &o: std::ranges::views::keys(nodes))
+                    solver.add(implies(swaps.at({v, o}), before.at(v) == after.at(o)));
+            }
+        }
+
+        const auto res = solver.check();
+        assert(res == z3::sat);
+        const auto model = solver.get_model();
+        std::vector<std::string> wires;
+        for (const auto &[pair, swapVar]: swaps) {
+            const auto &[v1, v2] = pair;
+            if (v1 < v2 && model.eval(swapVar).is_true()) {
+                wires.push_back(v1);
+                wires.push_back(v2);
+            }
+        }
+        std::sort(wires.begin(), wires.end());
+
+        std::string out;
+        for (const auto &wire: wires) {
+            if (!out.empty())
+                out += ",";
+            out += wire;
+        }
+        return out;
     }
 }
